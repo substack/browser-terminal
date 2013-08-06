@@ -31,7 +31,7 @@ stream.on('data', scrollBottom);
 var termStyle;
 function scrollBottom () {
     if (!termStyle) termStyle = window.getComputedStyle(terminal);
-    if (terminal.scrollHeight > termStyle.height) {
+    if (terminal.scrollHeight > parseInt(termStyle.height)) {
         terminal.scrollTop = terminal.scrollHeight;
     }
 }
