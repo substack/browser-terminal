@@ -2,6 +2,7 @@ var hypernal = require('hypernal');
 var term = hypernal();
 term.appendTo('#terminal');
 var through = require('through');
+
 var spawn = require('./lib/spawn.js');
 
 var bashful = require('bashful');
@@ -19,7 +20,9 @@ var sh = bashful({
     },
     write: function () {},
     read: function () {},
-    exists: function () { return false }
+    exists: function (file, cb) {
+        cb(file === '/' || file === '/home' || file === '/home/guest');
+    }
 });
 
 var stream = sh.createStream();
@@ -41,6 +44,35 @@ window.addEventListener('keydown', function (ev) {
     if (/[A-Z]/.test(c) && ev.shiftKey === false) {
         c = c.toLowerCase();
     }
+    else if (/\d/.test(c) && ev.shiftKey) {
+        c = ')!@#$%^&*('.charAt(parseInt(c));
+    }
+    else {
+        c = {
+            191: '/',
+            s_191: '?',
+            192: '`',
+            s_192: '~',
+            189: '-',
+            s_189: '_',
+            187: '=',
+            s_187: '+',
+            219: '[',
+            s_219: '{',
+            221: ']',
+            s_221: '}',
+            220: '\\',
+            s_220: '|',
+            186: ';',
+            s_186: ':',
+            222: '\'',
+            s_222: '"',
+            188: ',',
+            s_188: '<',
+            190: '.',
+            s_190: '>'
+        }[(ev.shiftKey ? 's_' : '') + ev.keyCode] || c;
+    }
     
     if (c === 'c' && ev.ctrlKey) {
         stream.write('\003');
@@ -49,7 +81,6 @@ window.addEventListener('keydown', function (ev) {
         stream.write('\004');
     }
     else if ((c === 'h' && ev.ctrlKey) || ev.keyCode === 8) {
-        term.write('\010 \010');
         stream.write('\010');
     }
     else {
