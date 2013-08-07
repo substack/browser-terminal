@@ -8,10 +8,8 @@
   background: black;
   font-family: monaco, monospace;
   font-size: 16px;
-}
-
-#terminal .inner {
   word-break: break-all;
+  white-space: pre;
 }
 
 #terminal .cursor {

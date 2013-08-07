@@ -47,8 +47,11 @@ stream.on('data', reposition);
 var termStyle;
 function reposition () {
     if (!termStyle) termStyle = window.getComputedStyle(terminal);
-    if (terminal.scrollHeight > parseInt(termStyle.height)) {
-        terminal.scrollTop = terminal.scrollHeight;
+    var nodes = terminal.childNodes[0].childNodes;
+    var current = nodes[term.term.y];
+    
+    if (current.offsetTop > termStyle.height) {
+        terminal.scrollTop = current.offsetTop;
     }
     
     var lineDiv = term.term.element.childNodes[term.term.y];
@@ -62,7 +65,17 @@ function reposition () {
 }
 
 window.addEventListener('keydown', function (ev) {
-    var c = String.fromCharCode(ev.keyCode);
+    var code = ev.which || ev.keyCode;
+    var c = String.fromCharCode(code);
+    
+    if (code < 32 && code !== 8 && !/\s/.test(c)) return;
+    
+    if (code >= 37 && code <= 40) {
+        c = '\x1b\x5b' + String.fromCharCode(code + 28);
+        stream.write(c);
+        return;
+    }
+    
     if (/[A-Z]/.test(c) && ev.shiftKey === false) {
         c = c.toLowerCase();
     }
