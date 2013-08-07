@@ -8,5 +8,22 @@
   background: black;
   font-family: monaco, monospace;
   font-size: 16px;
+}
+
+#terminal .inner {
   word-break: break-all;
+}
+
+#terminal .cursor {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 1em;
+  width: 1ex;
+  margin-right: -1ex;
+  background-color: rgba(255,255,255,0.25);
+}
+
+#terminal .cursor.on {
+  background-color: white;
 }

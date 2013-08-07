@@ -1,11 +1,26 @@
-var hypernal = require('hypernal');
-var term = hypernal();
-term.appendTo('#terminal');
 var through = require('through');
-
+var bashful = require('bashful');
+var hypernal = require('hypernal');
+var charSizer = require('char-size');
 var spawn = require('./lib/spawn.js');
 
-var bashful = require('bashful');
+var terminal = document.querySelector('#terminal');
+terminal.style.overflow = 'hidden';
+
+var term = hypernal();
+term.term.convertEol = true;
+term.appendTo(terminal);
+
+var charSize = charSizer(terminal);
+
+var cursor = document.createElement('div');
+cursor.classList.add('cursor');
+terminal.appendChild(cursor);
+
+setInterval(function () {
+    cursor.classList.toggle('on');
+}, 1000);
+
 var sh = bashful({
     env: {
         USER: 'guest',
@@ -27,16 +42,23 @@ var sh = bashful({
 
 var stream = sh.createStream();
 stream.pipe(term);
-
-var terminal = document.querySelector('#terminal');
-stream.on('data', scrollBottom);
+stream.on('data', reposition);
 
 var termStyle;
-function scrollBottom () {
+function reposition () {
     if (!termStyle) termStyle = window.getComputedStyle(terminal);
     if (terminal.scrollHeight > parseInt(termStyle.height)) {
         terminal.scrollTop = terminal.scrollHeight;
     }
+    
+    var lineDiv = term.term.element.childNodes[term.term.y];
+    cursor.style.top = parseInt(lineDiv.offsetTop)
+        + parseInt(termStyle.paddingTop)
+        + 2
+    ;
+    cursor.style.left = (
+        charSize.width * term.term.x + parseInt(termStyle.paddingLeft)
+    ) + 'px';
 }
 
 window.addEventListener('keydown', function (ev) {
@@ -85,8 +107,13 @@ window.addEventListener('keydown', function (ev) {
     }
     else {
         if (c === '\r') c = '\n';
-        term.write(c)
+        if (c === ' ') {
+            term.write('');
+            term.term.x ++;
+        }
+        else term.write(c)
         stream.write(c);
     }
-    scrollBottom();
+    
+    reposition();
 });
