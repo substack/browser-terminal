@@ -1,0 +1,32 @@
+{
+  "name": "browser-terminal",
+  "version": "0.0.0",
+  "description": "pipe a shell into an interactive browser terminal",
+  "main": "index.js",
+  "dependencies": {
+    "through": "~2.3.4",
+    "char-size": "~0.0.0",
+    "hypernal": "~0.2.7"
+  },
+  "devDependencies": {
+    "bashful": "~1.4.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/substack/browser-terminal.git"
+  },
+  "homepage": "https://github.com/substack/browser-terminal",
+  "keywords": [
+    "browser",
+    "shell",
+    "terminal",
+    "command-line",
+    "gui"
+  ],
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  },
+  "license": "MIT"
+}
