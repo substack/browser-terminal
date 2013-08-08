@@ -1,4 +1,4 @@
-#terminal {
+.terminal {
   position: absolute;
   left: 0px;
   top: 0px;
@@ -10,7 +10,7 @@
   font-size: 16px;
 }
 
-#terminal .cursor {
+.terminal .cursor {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -22,12 +22,12 @@
   color: transparent;
 }
 
-#terminal .cursor.on {
+.terminal .cursor.on {
   background-color: white;
   color: black;
 }
 
-#terminal div > div {
+.terminal > div > div {
   white-space: pre-wrap;
   word-break: break-word;
 }
