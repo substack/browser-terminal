@@ -4,7 +4,6 @@ var charSizer = require('char-size');
 
 module.exports = function () {
     var element = document.createElement('div');
-    element.classList.add('terminal');
     element.style.overflow = 'hidden';
     
     var term = hypernal();
@@ -12,7 +11,16 @@ module.exports = function () {
     term.appendTo(element);
     
     var cursor = document.createElement('div');
-    cursor.classList.add('cursor');
+    cursor.style.position = 'absolute';
+    cursor.style.top = '0px';
+    cursor.style.left = '0px';
+    cursor.style.height = '1em';
+    cursor.style.width = '1ex';
+    cursor.style.marginLeft = '1em';
+    cursor.style.marginTop = '0.5em';
+    cursor.style.paddingBottom = '4px';
+    cursor.style.color = 'transparent';
+    
     element.appendChild(cursor);
     
     var stream = through(function (buf) {
@@ -30,18 +38,35 @@ module.exports = function () {
             target = document.querySelector(target);
         }
         target.appendChild(element);
+        
         stream._charSize = charSizer(element);
-        stream._termStyle = window.getComputedStyle(element);
+        var ts = stream._termStyle = window.getComputedStyle(element);
+        
+        var nodes = element.childNodes[0].childNodes;
+        for (var i = 0; i < nodes.length; i++) {
+            nodes[i].style.whiteSpace = 'pre-wrap';
+            nodes[i].style.wordBreak = 'break-word';
+        }
+        
         return stream;
     };
     
     stream._cursorMoved = (function () {
         var to;
         return function () {
-            cursor.classList.add('on');
+            cursor.style.backgroundColor = 'white';
+            cursor.style.color = 'black';
+            
             if (to) clearTimeout(to);
             to = setTimeout(function f () {
-                cursor.classList.toggle('on');
+                if (cursor.style.backgroundColor === 'white') {
+                    cursor.style.backgroundColor = 'transparent';
+                    cursor.style.color = 'transparent';
+                }
+                else {
+                    cursor.style.backgroundColor = 'white';
+                    cursor.style.color = 'black';
+                }
                 to = setTimeout(f, 600);
             }, 500);
         };
@@ -66,7 +91,7 @@ function reposition () {
         + 2
     ;
     this._cursor.style.left = (
-        this._charSize.width * (this._term.term.x + 1.5)
+        this._charSize.width * this._term.term.x
         + parseInt(this._termStyle.paddingLeft)
     ) + 'px';
     this._cursor.textContent = current.textContent.charAt(this._term.term.x);
