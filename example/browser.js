@@ -10,9 +10,6 @@ var sh = bashful({
         PWD: '/home/guest',
         UID: 1000
     },
-    spawn: function () {},
-    write: function () {},
-    read: function () {},
     exists: function (file, cb) {
         cb(file === '/' || file === '/home' || file === '/home/guest');
     }
