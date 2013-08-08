@@ -4,7 +4,6 @@ var charSizer = require('char-size');
 
 module.exports = function () {
     var element = document.createElement('div');
-    element.style.overflow = 'hidden';
     element.style.position = 'relative';
     element.style.height = 'inherit';
     
@@ -38,9 +37,16 @@ module.exports = function () {
         }
         target.appendChild(element);
         
+        var style = window.getComputedStyle(target);
+        if (style.overflowY !== 'visible') {
+            element.style.overflowY = style.overflowY;
+        }
+        if (style.overflowY === 'scroll') {
+            target.style.overflowY = 'auto';
+        }
+        
         stream._charSize = charSizer(element);
-        var ts = stream._termStyle = window.getComputedStyle(element);
-        element.style.padding = '0px';
+        stream._termStyle = window.getComputedStyle(element);
         
         var nodes = element.childNodes[0].childNodes;
         stream._rowHeight = parseInt(window.getComputedStyle(nodes[0]).height);
