@@ -9,7 +9,6 @@
   font-family: monaco, monospace;
   font-size: 16px;
   word-break: break-all;
-  white-space: pre;
 }
 
 #terminal .cursor {

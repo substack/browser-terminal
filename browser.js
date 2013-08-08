@@ -67,14 +67,21 @@ function reposition () {
 window.addEventListener('keydown', function (ev) {
     var code = ev.which || ev.keyCode;
     var c = String.fromCharCode(code);
+    if (ev.shiftKey && ev.ctrlKey) return;
     
     if (code < 32 && code !== 8 && !/\s/.test(c)) return;
     
     if (code >= 37 && code <= 40) {
-        c = '\x1b\x5b' + String.fromCharCode(code + 28);
+        c = '\x1b[' + String.fromCharCode(code + 28);
         stream.write(c);
         return;
     }
+    else if (code === 33) c = '\x1b[5~' // pgup
+    else if (code === 34) c = '\x1b[6~' // pgdown
+    else if (code === 35) c = '\x1bOF' // end
+    else if (code === 36) c = '\x1bOH' // home
+    else if (code === 45) c = '\x1b[2~' // insert
+    else if (code === 46) c = '\x1b[3~' // delete
     
     if (/[A-Z]/.test(c) && ev.shiftKey === false) {
         c = c.toLowerCase();
@@ -83,30 +90,19 @@ window.addEventListener('keydown', function (ev) {
         c = ')!@#$%^&*('.charAt(parseInt(c));
     }
     else {
-        c = {
-            191: '/',
-            s_191: '?',
-            192: '`',
-            s_192: '~',
-            189: '-',
-            s_189: '_',
-            187: '=',
-            s_187: '+',
-            219: '[',
-            s_219: '{',
-            221: ']',
-            s_221: '}',
-            220: '\\',
-            s_220: '|',
-            186: ';',
-            s_186: ':',
-            222: '\'',
-            s_222: '"',
-            188: ',',
-            s_188: '<',
-            190: '.',
-            s_190: '>'
-        }[(ev.shiftKey ? 's_' : '') + ev.keyCode] || c;
+        c = ({
+            186: [ ';', ':' ],
+            187: [ '=', '+' ],
+            188: [ ',', '<' ],
+            189: [ '-', '_' ],
+            190: [ '.', '>' ],
+            191: [ '/', '?' ],
+            192: [ '`', '~' ],
+            219: [ '[', '{' ],
+            220: [ '\\', '|' ],
+            221: [ ']','}' ],
+            222: [ '\'', '"' ]
+        }[code] || [ c, c ])[ev.shiftKey ? 1 : 0] || c;
     }
     
     if (c === 'c' && ev.ctrlKey) {
@@ -121,10 +117,9 @@ window.addEventListener('keydown', function (ev) {
     else {
         if (c === '\r') c = '\n';
         if (c === ' ') {
-            term.write('');
             term.term.x ++;
         }
-        else term.write(c)
+        else term.write(c);
         stream.write(c);
     }
     
