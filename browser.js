@@ -17,9 +17,17 @@ var cursor = document.createElement('div');
 cursor.classList.add('cursor');
 terminal.appendChild(cursor);
 
-setInterval(function () {
-    cursor.classList.toggle('on');
-}, 1000);
+var cursorMoved = (function () {
+    var to;
+    return function () {
+        cursor.classList.add('on');
+        if (to) clearTimeout(to);
+        to = setTimeout(function f () {
+            cursor.classList.toggle('on');
+            to = setTimeout(f, 600);
+        }, 500);
+    };
+})();
 
 var sh = bashful({
     env: {
@@ -69,6 +77,8 @@ window.addEventListener('keydown', function (ev) {
     var code = ev.which || ev.keyCode;
     var c = String.fromCharCode(code);
     if (ev.shiftKey && ev.ctrlKey) return;
+    
+    cursorMoved();
     
     if (code < 32 && code !== 8 && !/\s/.test(c)) return;
     
