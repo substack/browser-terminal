@@ -116,13 +116,10 @@ window.addEventListener('keydown', function (ev) {
         }[code] || [ c, c ])[ev.shiftKey ? 1 : 0] || c;
     }
     
-    if (c === 'c' && ev.ctrlKey) {
-        stream.write('\003');
+    if (/^[a-z]$/.test(c) && ev.ctrlKey) {
+        stream.write(String.fromCharCode(code - 64));
     }
-    else if (c === 'd' && ev.ctrlKey) {
-        stream.write('\004');
-    }
-    else if ((c === 'h' && ev.ctrlKey) || ev.keyCode === 8) {
+    else if (code === 8) {
         stream.write('\010');
     }
     else {
