@@ -77,7 +77,10 @@ window.addEventListener('keydown', function (ev) {
     var code = ev.which || ev.keyCode;
     var c = String.fromCharCode(code);
     if (ev.shiftKey && ev.ctrlKey) return;
+    if (ev.ctrlKey && c === 'R') return; // pass refresh through
+    if (ev.ctrlKey && c === 'L') return; // pass ctrl-l through
     
+    ev.preventDefault();
     cursorMoved();
     
     if (code < 32 && code !== 8 && !/\s/.test(c)) return;
@@ -117,10 +120,11 @@ window.addEventListener('keydown', function (ev) {
     }
     
     if (/^[a-z]$/.test(c) && ev.ctrlKey) {
-        stream.write(String.fromCharCode(code - 64));
+        code = code - 64;
+        c = String.fromCharCode(code);
     }
-    else if (code === 8) {
-        stream.write('\010');
+    if (code === 7 || code === 8) {
+        stream.write(c);
     }
     else {
         if (c === '\r') c = '\n';
