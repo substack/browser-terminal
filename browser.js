@@ -62,6 +62,7 @@ function reposition () {
     cursor.style.left = (
         charSize.width * term.term.x + parseInt(termStyle.paddingLeft)
     ) + 'px';
+    cursor.textContent = current.textContent.charAt(term.term.x);
 }
 
 window.addEventListener('keydown', function (ev) {
@@ -76,12 +77,12 @@ window.addEventListener('keydown', function (ev) {
         stream.write(c);
         return;
     }
-    else if (code === 33) c = '\x1b[5~' // pgup
-    else if (code === 34) c = '\x1b[6~' // pgdown
-    else if (code === 35) c = '\x1bOF' // end
-    else if (code === 36) c = '\x1bOH' // home
-    else if (code === 45) c = '\x1b[2~' // insert
-    else if (code === 46) c = '\x1b[3~' // delete
+    else if (code === 33) return stream.write('\x1b[5~'); // pgup
+    else if (code === 34) return stream.write('\x1b[6~'); // pgdown
+    else if (code === 35) return stream.write('\x1bOF'); // end
+    else if (code === 36) return stream.write('\x1bOH'); // home
+    else if (code === 45) return stream.write('\x1b[2~'); // insert
+    else if (code === 46) return stream.write('\x1b[3~'); // delete
     
     if (/[A-Z]/.test(c) && ev.shiftKey === false) {
         c = c.toLowerCase();
