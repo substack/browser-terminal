@@ -10,7 +10,7 @@ var sh = bashful({
         PWD: '/home/guest',
         UID: 1000
     },
-    spawn: require('./spawn.js'),
+    spawn: function () {},
     write: function () {},
     read: function () {},
     exists: function (file, cb) {
