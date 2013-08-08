@@ -6,6 +6,7 @@ module.exports = function () {
     var element = document.createElement('div');
     element.style.overflow = 'hidden';
     element.style.position = 'relative';
+    element.style.height = 'inherit';
     
     var term = hypernal();
     term.term.convertEol = true;
@@ -42,6 +43,7 @@ module.exports = function () {
         element.style.padding = '0px';
         
         var nodes = element.childNodes[0].childNodes;
+        stream._rowHeight = parseInt(window.getComputedStyle(nodes[0]).height);
         for (var i = 0; i < nodes.length; i++) {
             nodes[i].style.whiteSpace = 'pre-wrap';
             nodes[i].style.wordBreak = 'break-word';
@@ -79,8 +81,9 @@ function reposition () {
     
     var nodes = this.element.childNodes[0].childNodes;
     var current = nodes[this._term.term.y];
+    var height = parseInt(this._termStyle.height);
     
-    if (current.offsetTop > this._termStyle.height) {
+    if (current.offsetTop + this._rowHeight > height) {
         this.element.scrollTop = current.offsetTop;
     }
     
