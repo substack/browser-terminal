@@ -1,6 +1,6 @@
 {
   "name": "browser-terminal",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "pipe a shell into an interactive browser terminal",
   "main": "index.js",
   "dependencies": {
