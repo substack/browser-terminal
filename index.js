@@ -5,6 +5,7 @@ var charSizer = require('char-size');
 module.exports = function () {
     var element = document.createElement('div');
     element.style.overflow = 'hidden';
+    element.style.position = 'relative';
     
     var term = hypernal();
     term.term.convertEol = true;
@@ -16,9 +17,6 @@ module.exports = function () {
     cursor.style.left = '0px';
     cursor.style.height = '1em';
     cursor.style.width = '1ex';
-    cursor.style.marginLeft = '1em';
-    cursor.style.marginTop = '0.5em';
-    cursor.style.paddingBottom = '4px';
     cursor.style.color = 'transparent';
     
     element.appendChild(cursor);
@@ -41,6 +39,7 @@ module.exports = function () {
         
         stream._charSize = charSizer(element);
         var ts = stream._termStyle = window.getComputedStyle(element);
+        element.style.padding = '0px';
         
         var nodes = element.childNodes[0].childNodes;
         for (var i = 0; i < nodes.length; i++) {
