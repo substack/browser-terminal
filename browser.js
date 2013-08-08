@@ -86,7 +86,9 @@ window.addEventListener('keydown', function (ev) {
     if (code < 32 && code !== 8 && !/\s/.test(c)) return;
     
     if (code >= 37 && code <= 40) {
-        c = '\x1b[' + String.fromCharCode(code + 28);
+        c = '\x1b[' + String.fromCharCode({
+            38: 65, 40: 66, 39: 67, 37: 68
+        }[code]);
         stream.write(c);
         return;
     }
