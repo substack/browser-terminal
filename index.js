@@ -8,6 +8,7 @@ module.exports = function () {
     element.style.height = 'inherit';
     
     var term = hypernal();
+    term.tail = true;
     term.term.convertEol = true;
     term.appendTo(element);
     
@@ -87,11 +88,6 @@ function reposition () {
     
     var nodes = this.element.childNodes[0].childNodes;
     var current = nodes[this._term.term.y];
-    var height = parseInt(this._termStyle.height);
-    
-    if (current.offsetTop + this._rowHeight > height) {
-        this.element.scrollTop = current.offsetTop;
-    }
     
     var lineDiv = this._term.term.element.childNodes[this._term.term.y];
     this._cursor.style.top = parseInt(lineDiv.offsetTop)
