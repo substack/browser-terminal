@@ -90,10 +90,11 @@ function reposition () {
     var current = nodes[this._term.term.y];
     
     var lineDiv = this._term.term.element.childNodes[this._term.term.y];
-    this._cursor.style.top = parseInt(lineDiv.offsetTop)
+    this._cursor.style.top = (
+        parseInt(lineDiv.offsetTop)
         + parseInt(this._termStyle.paddingTop)
         + 2
-    ;
+    ) + 'px';
     this._cursor.style.left = (
         this._charSize.width * this._term.term.x
         + parseInt(this._termStyle.paddingLeft)
